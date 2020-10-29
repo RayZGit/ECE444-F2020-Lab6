@@ -1,7 +1,7 @@
 import sqlite3
+import json
 from flask import Flask, g
-from flask import Flask, g, render_template
-from flask import Flask, g, render_template, request, session, flash, redirect, url_for
+from flask import Flask, g, render_template, request, session, flash, redirect, url_for, jsonify
 
 
 # configuration
@@ -47,6 +47,12 @@ def close_db(error):
     if hasattr(g, "sqlite_db"):
         g.sqlite_db.close()
 
+def test_delete_message(client):
+    """Ensure the messages are being deleted"""
+    rv = client.get('/delete/1')
+    data = json.loads(rv.data)
+    assert data["status"] == 1
+
 
 @app.route('/')
 def index():
@@ -79,7 +85,7 @@ def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
     return redirect(url_for('index'))
-    
+
 @app.route('/add', methods=['POST'])
 def add_entry():
     """Add new post to database."""
@@ -93,6 +99,19 @@ def add_entry():
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('index'))
+
+@app.route('/delete/<post_id>', methods=['GET'])
+def delete_entry(post_id):
+    """Delete post from database"""
+    result = {'status': 0, 'message': 'Error'}
+    try:
+        db = get_db()
+        db.execute('delete from entries where id=' + post_id)
+        db.commit()
+        result = {'status': 1, 'message': "Post Deleted"}
+    except Exception as e:
+        result = {'status': 0, 'message': repr(e)}
+    return jsonify(result)
 
 
 if __name__ == "__main__":
