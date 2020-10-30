@@ -1,6 +1,8 @@
 # ECE444-F2020-Lab6
 This repo is a copy of: https://github.com/mjhea0/flaskr-tdd \
 Deployment:https://rocky-beyond-74747.herokuapp.com/
+## Test suite for group project
+![alt text](https://github.com/RayZGit/ECE444-F2020-Lab6/blob/main/image/project_test.PNG)
 ## (2pt) Briefly Answer this question: What are the pros and cons of TDD?
 ### Pros
 - The Test-Driven Development (TDD) combines building and testing, which helps the correctness of the code.
